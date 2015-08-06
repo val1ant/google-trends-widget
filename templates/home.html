@@ -1,0 +1,88 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class = "row">
+<div class = "col-md-12">
+<form class="form-inline">
+		<h4>Enter your search parameters here:</h4>	
+		<input type="search" class="form-control" id="searchText" placeholder="[term1, term2, term3]">
+		<input type="search" class="form-control" id="startDate" placeholder="2015-01">
+		<input type="search" class="form-control" id="endDate" placeholder="2015-07"> 
+		<button type="submit" class="btn btn-default">Submit</button>
+	<br><br><br>
+</form>
+</div>
+</div>
+<div class = "row">
+<div class = "col-md-12">
+<div id="container" style="width:90%; height:300px;">
+</div>
+</div>
+</div>
+
+<script type="text/javascript">
+
+$(new function() {
+$(' .form-inline').on('submit', function(event) {
+	event.preventDefault();
+	var terms = document.getElementById('searchText').value;
+	var startDate = document.getElementById('startDate').value;
+	var endDate = document.getElementById('endDate').value;
+	var url = '/trends?terms='+terms+'&start='+startDate+'&end='+endDate;
+	$.getJSON(url,           
+	function(results){ 
+		if (results) {
+			updateChart(options,results);
+		} else {
+			$('body').html('Error');
+		}
+	});
+});
+});
+
+var options = {
+	chart: {
+		renderTo: 'container',
+		type: 'line'
+	},
+	title: {
+		text: 'Google Searches Over Time'
+	},
+	legend: {
+		layout: 'horizontal',
+		align: 'center',
+		verticalAlign: 'bottom',
+		borderWidth: 0
+	},
+	xAxis: {
+		type: 'datetime'
+	},
+	yAxis: {
+		max: 100,
+		min: 0,
+		title: {
+			text: 'Relative Search Interest'
+		}
+	}
+};
+
+function updateChart(options, data) {
+	var lines = data.lines; //array
+	var cleanLines = [];
+	lines.forEach( function(line) {
+		var newLine = {};
+		var x = line["term"];
+		newLine.name = x;
+		var pointArray = [];
+		line["points"].forEach( function(point) {
+			pointArray.push( [Date.parse(point['date']), point['value']] );
+		});
+		newLine.data = pointArray;
+		cleanLines.push(newLine);
+	});
+	options.series = cleanLines;
+	var chart = new Highcharts.Chart(options);
+}
+</script>
+	
+{% endblock %}
