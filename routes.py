@@ -1,7 +1,4 @@
-from flask import Flask, url_for
-from flask import request
-from flask import render_template
-from flask import jsonify
+from flask import Flask, url_for, request, render_template, jsonify, abort
 #from apiclient.discovery import build 
 import json
 
@@ -21,10 +18,11 @@ def home():
 @app.route("/trends", methods = ['GET','POST'])
 def trends():
 	results = {}
-	terms = request.args.get('terms')
-	startDate = request.args.get('startDate')
-	endDate = request.args.get('endDate')
-	#######if ^ don't exist return 500 (flask)
+	terms = request.args.get('terms1')
+	startDate = request.args.get('startDate2')
+	endDate = request.args.get('endDate3')
+	if (terms or startDate or endDate) is None:
+		abort(500)
 	####### Uncomment if on civicdev server #######
 	#DISCOVERY_URL = SERVER + DISCOVERY_URL_SUFFIX
 	#service = build('trends', 'v1beta', developerKey=MY_DEVELOPER_KEY, discoveryServiceUrl=DISCOVERY_URL)
@@ -33,6 +31,6 @@ def trends():
 		json_obj = json.load(data_file)
 		results = jsonify(json_obj)
 	return results
-
+	
 if __name__ == "__main__":
 	app.run(debug = True)
