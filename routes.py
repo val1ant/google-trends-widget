@@ -18,9 +18,9 @@ def home():
 @app.route("/trends", methods = ['GET','POST'])
 def trends():
 	results = {}
-	terms = request.args.get('terms1')
-	startDate = request.args.get('startDate2')
-	endDate = request.args.get('endDate3')
+	terms = request.args.get('terms')
+	startDate = request.args.get('startDate')
+	endDate = request.args.get('endDate')
 	if (terms or startDate or endDate) is None:
 		abort(500)
 	####### Uncomment if on civicdev server #######
