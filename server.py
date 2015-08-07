@@ -1,13 +1,19 @@
+import os
 from flask import Flask, url_for, request, render_template, jsonify, abort
-#from apiclient.discovery import build 
+from apiclient.discovery import build 
 import json
-
 from ConfigParser import SafeConfigParser
+
+DEBUG = True
+
+basedir = os.path.dirname(os.path.abspath(__file__))
 parser = SafeConfigParser()
-parser.read('config.txt')
+parser.read(os.path.join(basedir,'config.txt'))
+
 MY_DEVELOPER_KEY = parser.get('KEY','MY_DEVELOPER_KEY')
 SERVER = 'https://www.googleapis.com'
 DISCOVERY_URL_SUFFIX = '/discovery/v1/apis/trends/v1beta/rest'
+DISCOVERY_URL = SERVER + DISCOVERY_URL_SUFFIX
 
 app = Flask(__name__)
 
@@ -23,14 +29,13 @@ def trends():
 	endDate = request.args.get('endDate')
 	if (terms or startDate or endDate) is None:
 		abort(500)
-	####### Uncomment if on civicdev server #######
-	#DISCOVERY_URL = SERVER + DISCOVERY_URL_SUFFIX
-	#service = build('trends', 'v1beta', developerKey=MY_DEVELOPER_KEY, discoveryServiceUrl=DISCOVERY_URL)
-	#results = service.getGraph(terms=terms, restrictions_startDate=startDate, restrictions_endDate=endDate).execute()
-	with open('../trendswidget/dummydata3.json') as data_file:
-		json_obj = json.load(data_file)
-		results = jsonify(json_obj)
-	return results
+	if DEBUG:
+		with open('../trendswidget/dummydata3.json') as data_file:
+			results = json.load(data_file)
+	else:
+		service = build('trends', 'v1beta', developerKey=MY_DEVELOPER_KEY, discoveryServiceUrl=DISCOVERY_URL)
+		results = service.getGraph(terms=terms, restrictions_startDate=startDate, restrictions_endDate=endDate).execute()
+	return jsonify(results)
 	
 if __name__ == "__main__":
 	app.run(debug = True)
