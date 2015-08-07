@@ -13,4 +13,4 @@ Then copy `sampleconfig.txt` to `config.txt` and edit it to add in your Google A
 Running
 -------
 
-Run `python routes.py` and then hit `localhost:5000` in your browser!
+Run `python server.py` and then hit `localhost:5000` in your browser!
