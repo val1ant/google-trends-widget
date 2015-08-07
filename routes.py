@@ -10,6 +10,7 @@ parser.read('config.txt')
 MY_DEVELOPER_KEY = parser.get('KEY','MY_DEVELOPER_KEY')
 SERVER = 'https://www.googleapis.com'
 DISCOVERY_URL_SUFFIX = '/discovery/v1/apis/trends/v1beta/rest'
+DISCOVERY_URL = SERVER + DISCOVERY_URL_SUFFIX
 
 app = Flask(__name__)
 
