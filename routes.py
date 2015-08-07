@@ -28,12 +28,11 @@ def trends():
 		abort(500)
 	if DEBUG:
 		with open('../trendswidget/dummydata3.json') as data_file:
-			json_obj = json.load(data_file)
-			results = jsonify(json_obj)
+			results = json.load(data_file)
 	else:
 		service = build('trends', 'v1beta', developerKey=MY_DEVELOPER_KEY, discoveryServiceUrl=DISCOVERY_URL)
 		results = service.getGraph(terms=terms, restrictions_startDate=startDate, restrictions_endDate=endDate).execute()
-	return results
+	return jsonify(results)
 	
 if __name__ == "__main__":
 	app.run(debug = True)
