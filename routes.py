@@ -1,6 +1,8 @@
 from flask import Flask, url_for, request, render_template, jsonify, abort
-#from apiclient.discovery import build 
+from apiclient.discovery import build 
 import json
+
+DEBUG = True
 
 from ConfigParser import SafeConfigParser
 parser = SafeConfigParser()
@@ -23,13 +25,13 @@ def trends():
 	endDate = request.args.get('endDate')
 	if (terms or startDate or endDate) is None:
 		abort(500)
-	####### Uncomment if on civicdev server #######
-	#DISCOVERY_URL = SERVER + DISCOVERY_URL_SUFFIX
-	#service = build('trends', 'v1beta', developerKey=MY_DEVELOPER_KEY, discoveryServiceUrl=DISCOVERY_URL)
-	#results = service.getGraph(terms=terms, restrictions_startDate=startDate, restrictions_endDate=endDate).execute()
-	with open('../trendswidget/dummydata3.json') as data_file:
-		json_obj = json.load(data_file)
-		results = jsonify(json_obj)
+	if DEBUG:
+		with open('../trendswidget/dummydata3.json') as data_file:
+			json_obj = json.load(data_file)
+			results = jsonify(json_obj)
+	else:
+		service = build('trends', 'v1beta', developerKey=MY_DEVELOPER_KEY, discoveryServiceUrl=DISCOVERY_URL)
+		results = service.getGraph(terms=terms, restrictions_startDate=startDate, restrictions_endDate=endDate).execute()
 	return results
 	
 if __name__ == "__main__":
