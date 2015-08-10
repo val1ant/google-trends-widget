@@ -21,16 +21,16 @@ app = Flask(__name__)
 def home():
 	return render_template("home.html")
 
-@app.route("/trends", methods = ['GET','POST'])
+@app.route("/trends/", methods = ['GET','POST'])
 def trends():
 	results = {}
 	terms = request.args.get('terms')
-	startDate = request.args.get('startDate')
-	endDate = request.args.get('endDate')
+	startDate = request.args.get('start')
+	endDate = request.args.get('end')
 	if (terms or startDate or endDate) is None:
 		abort(500)
 	if DEBUG:
-		with open('../trendswidget/dummydata3.json') as data_file:
+		with open('../trendswidget/dummydata3.json') as data_file: 
 			results = json.load(data_file)
 	else:
 		service = build('trends', 'v1beta', developerKey=MY_DEVELOPER_KEY, discoveryServiceUrl=DISCOVERY_URL)
