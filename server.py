@@ -30,7 +30,7 @@ def trends():
 	if (terms or startDate or endDate) is None:
 		abort(500)
 	if DEBUG:
-		with open('../trendswidget/dummydata3.json') as data_file: 
+		with open('../google-trends-widget/dummydata3.json') as data_file: 
 			results = json.load(data_file)
 	else:
 		service = build('trends', 'v1beta', developerKey=MY_DEVELOPER_KEY, discoveryServiceUrl=DISCOVERY_URL)
